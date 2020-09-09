@@ -13,9 +13,7 @@
             <label for="nome">Senha</label>
             <input type="password" name="empresa.senha" >
             <input type="submit" class="button" value="Enviar">
-            <c:forEach var="error" items="${errors}">
-    ${error.category} ${error.message}<br />
-</c:forEach>
+   
         </form>
                 </div>
 

@@ -7,6 +7,7 @@ package com.mycompany.vraptorcdi_crud.controller;
 
 import br.com.caelum.vraptor.Controller;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.validator.SimpleMessage;
 import br.com.caelum.vraptor.validator.Validator;
 import com.mycompany.vraptorcdi_crud.model.Cliente;
 import com.mycompany.vraptorcdi_crud.model.Pessoa;
@@ -35,7 +36,10 @@ public class PessoasController {
         validator.validate(pessoa);
         validator.onErrorRedirectTo(ClientesController.class).form();
         pessoa.setType(1);
-        
+         if(dao.existeUsuario(pessoa.getEmail())){
+      validator.add(new SimpleMessage("Email", "Ja cadastrado"));
+            validator.onErrorRedirectTo(ClientesController.class).form();
+      }else{
         if (pessoa.getId() == null) {
        
             dao.add(pessoa);
@@ -47,5 +51,5 @@ public class PessoasController {
 
        result.of(ClientesController.class).login();
     }
-   
+     }
 }

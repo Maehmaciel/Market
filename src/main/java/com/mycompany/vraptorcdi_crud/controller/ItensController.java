@@ -29,13 +29,7 @@ public class ItensController{
         
     }
     
-      @Path("/item/delete/{id}")
-    public void delete(long id, Result result) {
-        Item item = dao.item(id);
-        dao.remove(item);
-
-        result.redirectTo(this).lista();
-    }
+    
     
        
   

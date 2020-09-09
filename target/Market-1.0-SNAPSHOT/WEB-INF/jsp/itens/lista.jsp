@@ -78,6 +78,11 @@
 <body>
 	<%@ include file="../../../components/header.jsp" %> 
 	<section class="carrinho">
+           
+  
+               
+                             
+                        
 		<section class="itens">
 			
                                         <c:forEach items="${venda.itens}" var="item" varStatus="loop">
@@ -91,9 +96,9 @@
 				<label for="qtd">
                                     <input id="qtd${loop.index}" class="qtd" min="1" onchange="getComboA(this)" value="${item.qtd}" type="number"  />
 				</label>
-				<button class="icon" href="carrinho.html">
+				<a class="icon" href="remove/${loop.index}">
 					<img src="${pageContext.request.contextPath}/assets/ic_close.svg">
-				</button>
+				</a>
 			</div>
                                         </c:forEach>
                                         
@@ -107,7 +112,7 @@
                                 <span>R$ ${venda.total()}</span>
 			</div>
                                 <c:if test="${not empty logado.nome}">
-                                    <a class="button" href="${pageContext.request.contextPath}/comprar">Comprar</a>
+                                    <a class="button" href="${pageContext.request.contextPath}/comprar/${logado.id}">Comprar</a>
                                 </c:if>
                         
 		</section>

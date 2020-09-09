@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 @Dependent
 public class ClienteDao {
@@ -27,6 +28,7 @@ public class ClienteDao {
 
     @Inject
     EntityManager manager;
+  
 
     public List<Cliente> clientes() {
         Query query = manager.createQuery("from Cliente");
@@ -64,6 +66,18 @@ manager.getTransaction().commit();
         query.setParameter("id", id);
         return (Cliente) query.getSingleResult();
     }
+             
+  public boolean existeUsuario(String email) {
+Query query = manager.createQuery("SELECT p FROM Cliente p where p.email =:email");
+        query.setParameter("email", email);
+        try{
+            query.getSingleResult();
+            return true;
+        }catch(Exception e){
+        return false;
+        }
+        
+}
              
                           public Cliente login(String email,String senha) {
              Query query = manager.createQuery("SELECT c FROM Cliente c where  c.email =:email AND c.senha=:senha");

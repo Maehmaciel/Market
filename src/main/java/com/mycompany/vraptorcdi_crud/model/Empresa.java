@@ -5,6 +5,7 @@
  */
 package com.mycompany.vraptorcdi_crud.model;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;

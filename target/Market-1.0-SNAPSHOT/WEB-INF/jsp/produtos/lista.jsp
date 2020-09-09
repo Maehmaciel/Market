@@ -7,7 +7,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="/vraptorCDI_CRUD/css/main.css">
+	<link rel="stylesheet" href="/Market/css/main.css">
         
 	<title>Document</title>
 	<style>
@@ -74,22 +74,49 @@
                                            
 				<p>${produto.descricao}</p>
 				<span>Valor: R$ ${produto.valor}</span>
-                    <c:if test="${empty venda.data}">
-                        <a class="button" href="${pageContext.request.contextPath}/newVenda/${produto.id}">Comprar</a>
-                    </c:if>
-                    <c:if test="${not empty venda.data}">
-                           <a class="button" href="${pageContext.request.contextPath}/add/${produto.id}">Comprar</a>
-                    </c:if>
+                  
+                           <a class="button buy" id="produto${produto.id}" onclick="carrinho(${produto.id})" >Comprar</a>
 			</div>
                     </c:forEach>
       
       <c:if test="${logado.acesso==2}">
           <c:redirect url = "produtos/form"/>
     </c:if>
-			         
+			
+                        
+                     
 		</div>
             
 	</section>
+                
+                <script>
+                  <c:forEach items="${venda.itens}" var="item" varStatus="loop">
+         
+         
+                                selecionado(${item.produto.id})
+                                        </c:forEach>      
+                    document.querySelectorAll('.buy').forEach(item => {
+  item.addEventListener('click', event => {
+      event.preventDefault()
+    
+  })
+})
+function carrinho(id) {
+   
+  window.location.href="${pageContext.request.contextPath}/add/"+id
+ 
+}
+
+function selecionado(id) {
+   
+   let e=document.getElementById('produto'+id)
+  e.removeAttribute("onclick"); 
+  e.style.backgroundColor="green"
+  e.innerHTML="Selecionado"
+  
+  console.log(e)
+}
+</script>
 </body>
 
 </html>

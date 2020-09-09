@@ -13,12 +13,15 @@ package com.mycompany.vraptorcdi_crud.controller;
 import br.com.caelum.vraptor.Controller;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.validator.SimpleMessage;
 import com.mycompany.vraptorcdi_crud.model.Cliente;
 import com.mycompany.vraptorcdi_crud.model.dao.ClienteDao;
 import java.util.List;
 import javax.inject.Inject;
 import br.com.caelum.vraptor.validator.Validator;
+import com.mycompany.vraptorcdi_crud.model.Empresa;
 import com.mycompany.vraptorcdi_crud.model.Pessoa;
+import javax.persistence.NoResultException;
 
 
 @Controller
@@ -41,9 +44,6 @@ public class ClientesController{
         return dao.clientes();
     }
     
-    public Long getCliente(){
-        return logado.getId();
-    }
     @Path("/cadastro")
     public void form() {
 
@@ -59,11 +59,14 @@ public class ClientesController{
 
         result.redirectTo(this).lista();
     }
-    @Path("/update/{id}")
-    public void update(long id, Result result) {
-        Cliente cliente = dao.buscarCliente(id);
-        result.include(cliente);
-        result.of(this).form();
+   
+    public void update() {
+        Cliente c = dao.buscarCliente(logado.getId());
+        logado.setEmail(c.getEmail());
+        logado.setNome(c.getNome());
+        logado.setAcesso(c.getAcesso());
+        logado.setVendas(c.getVendas());
+        result.of(VendasController.class).lista();
 
     }
     
@@ -73,20 +76,27 @@ public class ClientesController{
        this.logado.setNome(null);
        result.redirectTo(this).login();
     }
-
+    
+ 
     
    
     public void logar(Cliente cliente) {
         validator.validate(cliente);
         validator.onErrorRedirectTo(this).login();
-        this.logado=new Cliente();
-        
-        Cliente c= dao.login(cliente.getEmail(), cliente.getSenha());
+        try{
+            Cliente c= dao.login(cliente.getEmail(), cliente.getSenha());
         logado.setId(c.getId());
         logado.setEmail(c.getEmail());
         logado.setNome(c.getNome());
         logado.setAcesso(c.getAcesso());
         logado.setVendas(c.getVendas());
+        }
+        catch (NoResultException e){
+            validator.add(new SimpleMessage("login", "Email ou senha Incorretos"));
+            validator.onErrorRedirectTo(this).login();
+        }
+        
+        
         
         
         result.redirectTo(ProdutosController.class).lista();

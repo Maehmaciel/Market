@@ -12,9 +12,12 @@ import com.mycompany.vraptorcdi_crud.model.Cliente;
 import com.mycompany.vraptorcdi_crud.model.Item;
 import com.mycompany.vraptorcdi_crud.model.Produto;
 import com.mycompany.vraptorcdi_crud.model.Venda;
+import com.mycompany.vraptorcdi_crud.model.dao.ClienteDao;
 import com.mycompany.vraptorcdi_crud.model.dao.ProdutoDao;
 import com.mycompany.vraptorcdi_crud.model.dao.VendaDao;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -32,10 +35,19 @@ public class VendasController {
     private ProdutoDao produtoDao;
     @Inject
     private Result result;
+       @Inject
+    ClienteDao daoCliente;
 
     @Path("/add/{id}")
     public void addItem(long id) {
-       
+        
+       if(venda.getData()==null){
+           
+           venda.setData(new Date());
+         
+            
+
+       }
         Item item = new Item();
         item.setQtd(1);
         Produto produto = produtoDao.produto(id);
@@ -54,20 +66,28 @@ public class VendasController {
     
 
     
-    @Path("/newVenda/{id}")
-    public void newVenda(long id){
-        venda.setData(new Date());
-        addItem(id);
-    }
+
     
-     @Path("/comprar")
-    public void comprar(){
+     @Path("/comprar/{comprador}")
+    public void comprar(long comprador){
+        Cliente c= daoCliente.buscarCliente(comprador);
         Venda v = new Venda();
         v.setData(venda.getData());
         v.setItens(venda.getItens());
+        v.setCliente(c);
         dao.add(v);
+      
+        
+//        c.setVenda(dao.venda(v.getId()));
+//        daoCliente.update(c); 
+         venda.getItens().clear();
+      
+       venda.setData(null);
+       
+        
+     
 
-        result.redirectTo(ProdutosController.class).lista();
+        result.redirectTo(ClientesController.class).update();
     }
     @Path("/qtd/{item}/{qtd}")
     public void change(int item,double qtd) {
@@ -76,6 +96,13 @@ public class VendasController {
         result.redirectTo(ItensController.class).lista();
     }
 
+    
+     @Path("/itens/remove/{item}")
+    public void remove(int item) {
+        venda.getItens().remove(item);
+     
+        result.redirectTo(ItensController.class).lista();
+    }
     
     
 }

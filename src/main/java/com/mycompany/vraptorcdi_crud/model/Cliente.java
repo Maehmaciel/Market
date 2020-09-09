@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -51,6 +52,7 @@ public class Cliente implements Serializable{
     private int acesso;
      @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_cliente")
+      
      @Fetch(FetchMode.JOIN)
       private List<Venda> vendas;
       public List<Venda> getVendas() {
